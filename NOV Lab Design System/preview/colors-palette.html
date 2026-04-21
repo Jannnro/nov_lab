@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,300;0,400;0,700;0,800;1,900&family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #0F041A; font-family: 'Montserrat', sans-serif; padding: 24px; width: 700px; }
+  .swatches { display: flex; gap: 16px; align-items: flex-end; }
+  .swatch { display: flex; flex-direction: column; gap: 10px; align-items: center; }
+  .chip { border-radius: 24px; }
+  .label { font-size: 11px; color: rgba(253,253,253,0.55); letter-spacing: 0.06em; text-align: center; font-family: 'Montserrat', sans-serif; }
+  .hex { font-size: 13px; color: #FDFDFD; font-family: 'Montserrat', sans-serif; font-weight: 600; }
+  .name { font-size: 10px; color: rgba(253,253,253,0.4); text-transform: uppercase; letter-spacing: 0.1em; }
+</style>
+</head>
+<body>
+  <div class="swatches">
+    <div class="swatch">
+      <div class="chip" style="width:120px;height:120px;background:#0F041A;border:1.5px solid rgba(253,253,253,0.15);"></div>
+      <div class="hex">#0F041A</div>
+      <div class="name">Background</div>
+    </div>
+    <div class="swatch">
+      <div class="chip" style="width:120px;height:120px;background:#2A0A4A;"></div>
+      <div class="hex">#2A0A4A</div>
+      <div class="name">Purple</div>
+    </div>
+    <div class="swatch">
+      <div class="chip" style="width:160px;height:120px;background:#FF1CF7;box-shadow:0 0 40px rgba(255,28,247,0.45);"></div>
+      <div class="hex">#FF1CF7</div>
+      <div class="name">Magenta ✦ Accent</div>
+    </div>
+    <div class="swatch">
+      <div class="chip" style="width:120px;height:120px;background:#FDFDFD;"></div>
+      <div class="hex">#FDFDFD</div>
+      <div class="name">White</div>
+    </div>
+    <div class="swatch">
+      <div class="chip" style="width:120px;height:120px;background:#000000;border:1.5px solid rgba(253,253,253,0.1);"></div>
+      <div class="hex">#000000</div>
+      <div class="name">Black</div>
+    </div>
+  </div>
+</body>
+</html>

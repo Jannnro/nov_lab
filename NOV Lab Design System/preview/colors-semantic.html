@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,300;0,700;0,800;1,900&family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #0F041A; padding: 28px 32px; width: 700px; }
+  .row { display: flex; align-items: center; gap: 20px; margin-bottom: 6px; }
+  .role { font-family: 'Montserrat', sans-serif; font-size: 10px; color: rgba(253,253,253,0.35); text-transform: uppercase; letter-spacing: 0.1em; width: 110px; flex-shrink: 0; }
+  .dot { width: 8px; height: 8px; border-radius: 50%; background: #FF1CF7; flex-shrink: 0; }
+</style>
+</head>
+<body>
+  <div class="row">
+    <div class="role">accent</div>
+    <div class="dot"></div>
+    <span style="font-family:'Poppins',sans-serif;font-size:14px;color:#FF1CF7;font-weight:600;letter-spacing:0.05em;">#FF1CF7 — Electric Magenta</span>
+  </div>
+  <div class="row">
+    <div class="role">bg primary</div>
+    <div class="dot" style="background:rgba(253,253,253,0.3)"></div>
+    <span style="font-family:'Poppins',sans-serif;font-size:14px;color:rgba(253,253,253,0.7);font-weight:400;">#0F041A — Deep Black</span>
+  </div>
+  <div class="row">
+    <div class="role">bg card</div>
+    <div class="dot" style="background:#2A0A4A"></div>
+    <span style="font-family:'Poppins',sans-serif;font-size:14px;color:rgba(253,253,253,0.7);font-weight:400;">#2A0A4A — Deep Purple</span>
+  </div>
+  <div class="row">
+    <div class="role">foreground</div>
+    <div class="dot" style="background:#FDFDFD"></div>
+    <span style="font-family:'Poppins',sans-serif;font-size:14px;color:rgba(253,253,253,0.7);font-weight:400;">#FDFDFD — White</span>
+  </div>
+  <div class="row">
+    <div class="role">fg muted</div>
+    <div class="dot" style="background:rgba(253,253,253,0.35)"></div>
+    <span style="font-family:'Poppins',sans-serif;font-size:14px;color:rgba(253,253,253,0.4);font-weight:400;">rgba(253,253,253,0.55) — Muted</span>
+  </div>
+  <div class="row" style="margin-top:8px">
+    <div class="role">border</div>
+    <div style="width:40px;height:2px;background:#FF1CF7;flex-shrink:0;"></div>
+    <span style="font-family:'Poppins',sans-serif;font-size:14px;color:rgba(253,253,253,0.5);font-weight:300;">2px solid #FF1CF7</span>
+  </div>
+  <div class="row">
+    <div class="role">border subtle</div>
+    <div style="width:40px;height:1px;background:rgba(255,28,247,0.25);flex-shrink:0;"></div>
+    <span style="font-family:'Poppins',sans-serif;font-size:14px;color:rgba(253,253,253,0.5);font-weight:300;">1px solid rgba(#FF1CF7, 0.25)</span>
+  </div>
+</body>
+</html>

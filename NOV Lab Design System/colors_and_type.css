@@ -1,0 +1,173 @@
+/* ============================================================
+   NOV Lab — Design System Tokens
+   colors_and_type.css
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,300;0,400;0,500;0,700;0,800;1,900&family=Montserrat:wght@400;600&family=Space+Mono:wght@400&display=swap');
+
+/* ────────────────────────────────────────────
+   BRAND COLOR PRIMITIVES
+   ──────────────────────────────────────────── */
+:root {
+  --nov-black:        #0F041A;   /* near-black deep purple — primary BG */
+  --nov-purple:       #2A0A4A;   /* deep violet — secondary BG, cards */
+  --nov-magenta:      #FF1CF7;   /* electric magenta — brand accent */
+  --nov-white:        #FDFDFD;   /* off-white — primary text on dark */
+  --nov-pure-white:   #FFFFFF;
+  --nov-pure-black:   #000000;
+
+  /* ────────────────────────────────────────────
+     SEMANTIC COLOR TOKENS
+     ──────────────────────────────────────────── */
+  --color-bg:         var(--nov-black);
+  --color-bg-card:    var(--nov-purple);
+  --color-accent:     var(--nov-magenta);
+  --color-fg:         var(--nov-white);
+  --color-fg-muted:   rgba(253,253,253,0.55);
+  --color-border:     var(--nov-magenta);
+  --color-border-subtle: rgba(255,28,247,0.25);
+
+  /* ────────────────────────────────────────────
+     TYPOGRAPHY — FONT FAMILIES
+     ──────────────────────────────────────────── */
+  --font-display:     'Poppins', sans-serif;   /* Primary — all weights */
+  --font-secondary:   'Montserrat', sans-serif; /* Labels, UI text */
+  --font-mono:        'Space Mono', monospace;  /* Accent / code */
+
+  /* ────────────────────────────────────────────
+     TYPOGRAPHY — SCALE
+     ──────────────────────────────────────────── */
+  --text-hero:        128px;
+  --text-display:      64px;
+  --text-title:        48px;
+  --text-subtitle:     32px;
+  --text-body-lg:      24px;
+  --text-body:         18px;
+  --text-sm:           14px;
+  --text-xs:           12px;
+
+  /* ────────────────────────────────────────────
+     TYPOGRAPHY — LINE HEIGHTS
+     ──────────────────────────────────────────── */
+  --leading-tight:    1.0;
+  --leading-snug:     1.15;
+  --leading-normal:   1.4;
+  --leading-relaxed:  1.6;
+
+  /* ────────────────────────────────────────────
+     SPACING
+     ──────────────────────────────────────────── */
+  --space-1:   4px;
+  --space-2:   8px;
+  --space-3:  12px;
+  --space-4:  16px;
+  --space-5:  24px;
+  --space-6:  32px;
+  --space-7:  48px;
+  --space-8:  64px;
+  --space-9:  96px;
+  --space-10: 128px;
+
+  /* ────────────────────────────────────────────
+     BORDER RADIUS
+     ──────────────────────────────────────────── */
+  --radius-sm:   8px;
+  --radius-md:  16px;
+  --radius-lg:  32px;
+  --radius-xl:  63px;
+  --radius-2xl: 81px;
+  --radius-full: 9999px;
+
+  /* ────────────────────────────────────────────
+     BORDERS / STROKES
+     ──────────────────────────────────────────── */
+  --border-accent:  2px solid var(--nov-magenta);
+  --border-subtle:  1px solid var(--color-border-subtle);
+}
+
+/* ────────────────────────────────────────────
+   SEMANTIC TYPE STYLES
+   ──────────────────────────────────────────── */
+
+/* Hero — "NOV Lab." branding at max size */
+.t-hero {
+  font-family: var(--font-display);
+  font-size: var(--text-hero);
+  font-weight: 900;
+  font-style: italic;
+  line-height: var(--leading-tight);
+  color: var(--color-fg);
+}
+
+/* Display — section openers, big statements */
+.t-display {
+  font-family: var(--font-display);
+  font-size: var(--text-display);
+  font-weight: 800;
+  line-height: var(--leading-tight);
+  color: var(--color-fg);
+}
+
+/* Title — page/section headings */
+.t-title {
+  font-family: var(--font-display);
+  font-size: var(--text-title);
+  font-weight: 700;
+  line-height: var(--leading-snug);
+  color: var(--color-fg);
+}
+
+/* Subtitle / large body */
+.t-subtitle {
+  font-family: var(--font-display);
+  font-size: var(--text-subtitle);
+  font-weight: 400;
+  line-height: var(--leading-normal);
+  color: var(--color-fg);
+}
+
+/* Body */
+.t-body {
+  font-family: var(--font-display);
+  font-size: var(--text-body);
+  font-weight: 300;
+  line-height: var(--leading-relaxed);
+  color: var(--color-fg-muted);
+}
+
+/* Label — Montserrat for UI labels, tags */
+.t-label {
+  font-family: var(--font-secondary);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-fg-muted);
+}
+
+/* Mono — Space Mono for codes, accents */
+.t-mono {
+  font-family: var(--font-mono);
+  font-size: var(--text-body);
+  font-weight: 400;
+  color: var(--color-accent);
+}
+
+/* Accent — magenta highlight for key words */
+.t-accent {
+  color: var(--nov-magenta);
+}
+
+/* ────────────────────────────────────────────
+   UTILITY CLASSES
+   ──────────────────────────────────────────── */
+.bg-dark   { background-color: var(--nov-black); }
+.bg-card   { background-color: var(--nov-purple); }
+.bg-accent { background-color: var(--nov-magenta); }
+.bg-light  { background-color: var(--nov-white); }
+
+.border-accent { border: var(--border-accent); }
+.border-subtle { border: var(--border-subtle); }
+
+.radius-xl  { border-radius: var(--radius-xl); }
+.radius-2xl { border-radius: var(--radius-2xl); }

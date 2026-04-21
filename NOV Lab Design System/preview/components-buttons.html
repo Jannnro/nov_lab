@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,300;0,700;0,800;1,900&family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #0F041A; padding: 28px 32px; width: 700px; display: flex; gap: 20px; flex-wrap: wrap; align-items: center; }
+  .btn { font-family: 'Poppins', sans-serif; font-size: 15px; font-weight: 600; border-radius: 9999px; cursor: pointer; transition: opacity 0.15s; display: inline-flex; align-items: center; gap: 8px; }
+  .label { font-family: 'Montserrat'; font-size: 10px; color: rgba(253,253,253,0.3); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 8px; }
+  .group { display: flex; flex-direction: column; align-items: flex-start; }
+</style>
+</head>
+<body>
+  <div class="group">
+    <button class="btn" style="background:#FF1CF7;color:#0F041A;padding:14px 32px;">Começar agora</button>
+    <div class="label">Primary CTA</div>
+  </div>
+  <div class="group">
+    <button class="btn" style="background:transparent;color:#FF1CF7;padding:13px 31px;border:2px solid #FF1CF7;">Saiba mais</button>
+    <div class="label">Secondary / Outline</div>
+  </div>
+  <div class="group">
+    <button class="btn" style="background:#2A0A4A;color:#FDFDFD;padding:14px 32px;">Ver projetos</button>
+    <div class="label">Tertiary / Ghost</div>
+  </div>
+  <div class="group">
+    <button class="btn" style="background:#FF1CF7;color:#0F041A;padding:10px 22px;font-size:13px;">Contato</button>
+    <div class="label">Small</div>
+  </div>
+  <div class="group">
+    <button class="btn" style="background:#FF1CF7;color:#0F041A;padding:14px 32px;opacity:0.35;cursor:not-allowed;">Indisponível</button>
+    <div class="label">Disabled</div>
+  </div>
+</body>
+</html>

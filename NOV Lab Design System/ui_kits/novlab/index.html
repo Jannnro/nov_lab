@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NOV Lab — Marketing é ciência.</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,300;0,400;0,500;0,700;0,800;1,900&family=Montserrat:wght@400;600&family=Space+Mono:wght@400&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body { background: #0F041A; font-family: 'Poppins', sans-serif; color: #FDFDFD; overflow: hidden; }
+
+  input { -webkit-appearance: none; font-family: 'Poppins', sans-serif; }
+  input::placeholder { color: rgba(253,253,253,0.25); }
+  button { font-family: 'Poppins', sans-serif; }
+
+  @keyframes gradMove {
+    0%   { background-position: 0% 50%; }
+    50%  { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+  .nov-bg {
+    background: linear-gradient(135deg, #0F041A 0%, #1a0630 25%, #2A0A4A 50%, #1a0230 75%, #0F041A 100%);
+    background-size: 400% 400%;
+    animation: gradMove 12s ease infinite;
+  }
+  .nov-bg-radial::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    background:
+      radial-gradient(ellipse 60% 50% at 20% 30%, rgba(255,28,247,0.07) 0%, transparent 70%),
+      radial-gradient(ellipse 50% 60% at 80% 70%, rgba(42,10,74,0.6) 0%, transparent 70%);
+    animation: radialDrift 18s ease-in-out infinite alternate;
+  }
+  @keyframes radialDrift {
+    0%   { opacity: 1; transform: scale(1) translate(0, 0); }
+    50%  { opacity: 0.8; transform: scale(1.1) translate(2%, 3%); }
+    100% { opacity: 1; transform: scale(1) translate(-2%, -2%); }
+  }
+
+  /* Tech grid */
+  .tech-grid {
+    position: fixed; inset: 0; pointer-events: none; z-index: 0;
+    background-image:
+      linear-gradient(rgba(255,28,247,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,28,247,0.04) 1px, transparent 1px);
+    background-size: 48px 48px;
+    mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 40%, transparent 100%);
+  }
+
+  /* Glass morphism */
+  .glass {
+    background: rgba(42,10,74,0.3) !important;
+    backdrop-filter: blur(20px) saturate(160%);
+    -webkit-backdrop-filter: blur(20px) saturate(160%);
+    border: 1px solid rgba(255,28,247,0.18) !important;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.06) !important;
+  }
+  .glass:hover {
+    border-color: rgba(255,28,247,0.5) !important;
+    box-shadow: 0 0 28px rgba(255,28,247,0.12), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.08) !important;
+    transform: translateY(-4px);
+  }
+
+  /* Scan line */
+  @keyframes scanLine {
+    0%   { top: -4px; opacity: 0; }
+    5%   { opacity: 1; }
+    95%  { opacity: 1; }
+    100% { top: 100%; opacity: 0; }
+  }
+  .scan-line {
+    position: absolute; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, transparent, rgba(255,28,247,0.55), transparent);
+    animation: scanLine 4s linear infinite;
+    pointer-events: none; z-index: 2;
+  }
+
+  /* Floating orbs */
+  @keyframes orbFloat1 { 0%,100%{transform:translate(0,0) scale(1);} 50%{transform:translate(28px,-36px) scale(1.07);} }
+  @keyframes orbFloat2 { 0%,100%{transform:translate(0,0) scale(1);} 50%{transform:translate(-22px,28px) scale(0.94);} }
+  @keyframes orbFloat3 { 0%,100%{transform:translate(0,0) scale(1);} 50%{transform:translate(16px,18px) scale(1.04);} }
+  .orb { position: fixed; border-radius: 50%; filter: blur(80px); pointer-events: none; z-index: 0; }
+  .orb1 { width:340px;height:340px;background:#FF1CF7;top:-80px;left:8%;opacity:0.2;animation:orbFloat1 14s ease-in-out infinite; }
+  .orb2 { width:280px;height:280px;background:#2A0A4A;bottom:4%;right:6%;opacity:0.45;animation:orbFloat2 18s ease-in-out infinite; }
+  .orb3 { width:200px;height:200px;background:#FF1CF7;top:42%;right:20%;opacity:0.08;animation:orbFloat3 22s ease-in-out infinite; }
+
+  /* Data ticker */
+  @keyframes ticker { 0%{transform:translateX(0);} 100%{transform:translateX(-50%);} }
+  .ticker-wrap { overflow: hidden; white-space: nowrap; border-top: 1px solid rgba(255,28,247,0.12); border-bottom: 1px solid rgba(255,28,247,0.12); padding: 9px 0; }
+  .ticker-inner { display: inline-block; animation: ticker 24s linear infinite; }
+  .ticker-inner span { margin: 0 36px; font-family: 'Space Mono',monospace; font-size: 11px; color: rgba(255,28,247,0.45); letter-spacing: 0.04em; }
+
+  #tweaks-panel {
+    display: none; position: fixed; bottom: 24px; right: 24px;
+    background: #1a0630; border: 1.5px solid rgba(255,28,247,0.3);
+    border-radius: 20px; padding: 20px; z-index: 9999; width: 220px;
+  }
+  #tweaks-panel.open { display: block; }
+  .tw-title { font-family: 'Montserrat'; font-size: 11px; font-weight: 600; color: rgba(253,253,253,0.35); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 16px; }
+  .tw-label { font-family: 'Montserrat'; font-size: 10px; color: rgba(253,253,253,0.3); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px; }
+  .tw-row { margin-bottom: 14px; }
+  .tw-select { width: 100%; background: #2A0A4A; border: 1.5px solid rgba(255,28,247,0.2); color: #FDFDFD; font-family: 'Poppins'; font-size: 12px; border-radius: 10px; padding: 6px 10px; outline: none; cursor: pointer; }
+  .tw-toggle { display: flex; border: 1.5px solid rgba(255,28,247,0.2); border-radius: 10px; overflow: hidden; }
+  .tw-toggle button { flex: 1; background: transparent; color: rgba(253,253,253,0.35); font-family: 'Montserrat'; font-size: 11px; border: none; padding: 6px 0; cursor: pointer; transition: all 0.15s; }
+  .tw-toggle button.active { background: #FF1CF7; color: #0F041A; font-weight: 600; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<div id="tweaks-panel">
+  <div class="tw-title">Tweaks</div>
+  <div class="tw-row">
+    <div class="tw-label">Seção</div>
+    <select class="tw-select" id="tw-screen">
+      <option value="home">Hero</option>
+      <option value="conceito">Conceito</option>
+      <option value="servicos">Serviços</option>
+      <option value="contato">Contato</option>
+    </select>
+  </div>
+  <div class="tw-row">
+    <div class="tw-label">Cards</div>
+    <div class="tw-toggle">
+      <button class="active" id="tw-purple" onclick="setCards('purple')">Roxo</button>
+      <button id="tw-border" onclick="setCards('border')">Borda</button>
+    </div>
+  </div>
+  <div class="tw-row">
+    <div class="tw-label">Hero title</div>
+    <div class="tw-toggle">
+      <button class="active" id="tw-italic" onclick="setHero('italic')">Itálico</button>
+      <button id="tw-normal" onclick="setHero('normal')">Normal</button>
+    </div>
+  </div>
+</div>
+
+<script type="text/babel">
+const { useState, useEffect } = React;
+
+// ─── TOKENS ───
+const C = {
+  bg:      '#0F041A',
+  purple:  'rgba(42,10,74,0.75)',
+  magenta: '#FF1CF7',
+  fg:      '#FDFDFD',
+  muted:   'rgba(253,253,253,0.55)',
+  border:  'rgba(255,28,247,0.25)',
+};
+
+// ─── ATOMS ───
+
+// Custom "N." icon mark — exact vector path from Figma
+function NMark({ size = 48, color = '#FDFDFD', dotColor = '#FF1CF7' }) {
+  const scale = size / 212.4;
+  const w = 241.2 * scale;
+  const dotR = 18 * scale;
+  const dotX = w - dotR * 0.5;
+  const dotY = size - dotR * 0.5;
+  return (
+    <div style={{ position: 'relative', width: w + dotR, height: size + dotR * 0.5, display: 'inline-block' }}>
+      <svg width={w} height={size} viewBox="0 0 241.2 212.4" style={{ display: 'block' }}>
+        <path d="M 203.7 212.4 L 137.1 212.4 L 66.6 30.9 L 66.6 212.4 L 0 212.4 L 37.5 0 L 104.1 0 L 155 191.4 L 174.6 0 L 241.2 0 L 203.7 212.4 Z"
+          fill={color} fillRule="nonzero" />
+      </svg>
+      <div style={{
+        position: 'absolute', bottom: 0, right: 0,
+        width: dotR * 2, height: dotR * 2,
+        borderRadius: '50%', background: dotColor,
+      }} />
+    </div>
+  );
+}
+
+function Logo({ size = 32 }) {
+  return (
+    <div style={{ display: 'flex', alignItems: 'baseline', userSelect: 'none' }}>
+      <span style={{ fontFamily: 'Poppins', fontSize: size, fontWeight: 900, fontStyle: 'italic', color: C.fg, lineHeight: 1 }}>NOV</span>
+      <span style={{ fontFamily: 'Poppins', fontSize: size, fontWeight: 100, color: C.fg, lineHeight: 1 }}>Lab</span>
+      <span style={{ fontFamily: 'Poppins', fontSize: size, fontWeight: 100, color: C.magenta, lineHeight: 1 }}>.</span>
+    </div>
+  );
+}
+
+function Btn({ children, variant = 'primary', size = 'md', onClick }) {
+  const [hov, setHov] = useState(false);
+  const pad = size === 'sm' ? '10px 24px' : size === 'lg' ? '17px 42px' : '13px 32px';
+  const fs  = size === 'sm' ? 13 : size === 'lg' ? 16 : 14;
+  let bg, color, border;
+  if (variant === 'primary') {
+    bg = C.magenta; color = '#0F041A'; border = 'none';
+    if (hov) bg = 'rgba(255,28,247,0.85)';
+  } else if (variant === 'outline') {
+    bg = hov ? 'rgba(255,28,247,0.08)' : 'transparent';
+    color = C.magenta; border = `2px solid ${C.magenta}`;
+  } else {
+    bg = hov ? '#1e0535' : C.purple;
+    color = C.muted; border = `1.5px solid ${C.border}`;
+  }
+  return (
+    <button onClick={onClick}
+      onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}
+      style={{ background: bg, color, border, fontFamily: 'Poppins', fontSize: fs, fontWeight: 600,
+        borderRadius: 9999, padding: pad, cursor: 'pointer', transition: 'all 0.15s',
+        display: 'inline-flex', alignItems: 'center', gap: 8 }}
+    >{children}</button>
+  );
+}
+
+function Tag({ children }) {
+  return (
+    <span style={{ fontFamily: 'Montserrat', fontSize: 10, fontWeight: 600, letterSpacing: '0.1em',
+      textTransform: 'uppercase', borderRadius: 9999, padding: '5px 14px',
+      background: 'rgba(255,28,247,0.12)', color: C.magenta,
+      border: `1px solid rgba(255,28,247,0.25)`, display: 'inline-block' }}
+    >{children}</span>
+  );
+}
+
+function Nav({ onNav, current }) {
+  const links = [
+    { key: 'home', label: 'Início' },
+    { key: 'conceito', label: 'Conceito' },
+    { key: 'servicos', label: 'Serviços' },
+    { key: 'contato', label: 'Contato' },
+  ];
+  return (
+    <nav style={{ position: 'fixed', top: 0, left: 0, right: 0, height: 70,
+      display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+      padding: '0 64px', background: 'rgba(15,4,26,0.75)', backdropFilter: 'blur(20px)',
+      borderBottom: `1px solid ${C.border}`, zIndex: 100 }}>
+      <Logo size={26} />
+      <div style={{ display: 'flex', gap: 40 }}>
+        {links.map(l => (
+          <button key={l.key} onClick={() => onNav(l.key)} style={{
+            background: 'none', border: 'none', cursor: 'pointer',
+            fontFamily: 'Montserrat', fontSize: 13, fontWeight: 600,
+            color: current === l.key ? C.magenta : C.muted,
+            letterSpacing: '0.03em', transition: 'color 0.15s', padding: 0,
+          }}
+          onMouseEnter={e => e.currentTarget.style.color = C.magenta}
+          onMouseLeave={e => e.currentTarget.style.color = current === l.key ? C.magenta : C.muted}
+          >{l.label}</button>
+        ))}
+      </div>
+      <Btn size="sm">Falar com a gente</Btn>
+    </nav>
+  );
+}
+
+// ─── SCREENS ───
+function HomeScreen({ cardStyle, heroStyle }) {
+  return (
+    <div style={{ minHeight: '100vh', paddingTop: 70 }}>
+      <div className="ticker-wrap" style={{ position: 'relative', zIndex: 10 }}>
+        <div className="ticker-inner">
+          {[...Array(2)].map((_, r) => (
+            <span key={r}>
+              <span>INTELIGÊNCIA ARTIFICIAL</span>
+              <span>✦ DADOS QUE GUIAM DECISÕES</span>
+              <span>✦ MARKETING É CIÊNCIA</span>
+              <span>✦ RESULTADO MENSURÁVEL</span>
+              <span>✦ INOVAÇÃO CONTÍNUA</span>
+              <span>✦ NOV LAB — 2025</span>
+              <span>✦ O FUTURO COMEÇA AQUI</span>
+            </span>
+          ))}
+        </div>
+      </div>
+      <div style={{ maxWidth: 1200, margin: '0 auto', padding: '56px 64px 80px',
+        display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 80, alignItems: 'center' }}>
+
+        {/* Left */}
+        <div>
+          <Tag>Brand Identity 2025</Tag>
+          <h1 style={{ fontFamily: 'Poppins', fontSize: 68, fontWeight: 900,
+            fontStyle: heroStyle === 'italic' ? 'italic' : 'normal',
+            color: C.fg, lineHeight: 1.0, margin: '22px 0 10px' }}>
+            Marketing<br/>
+            <span style={{ color: C.magenta }}>é ciência.</span>
+          </h1>
+          <p style={{ fontFamily: 'Poppins', fontSize: 18, fontWeight: 300, color: C.muted,
+            lineHeight: 1.65, maxWidth: 440, marginBottom: 8 }}>
+            O futuro começa aqui.
+          </p>
+          <p style={{ fontFamily: 'Poppins', fontSize: 14, fontWeight: 300,
+            color: 'rgba(253,253,253,0.38)', lineHeight: 1.7, maxWidth: 440, marginBottom: 36 }}>
+            Em um laboratório, nada é por acaso. Cada dado tem significado, cada ação gera resultado.
+          </p>
+          <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap' }}>
+            <Btn>Começar agora</Btn>
+            <Btn variant="outline">Ver nosso trabalho</Btn>
+          </div>
+          <div style={{ display: 'flex', gap: 40, marginTop: 52,
+            paddingTop: 32, borderTop: `1px solid ${C.border}` }}>
+            {[['IA', 'No centro de cada estratégia'], ['Dados', 'Que guiam decisões'], ['Resultado', 'Mensurável e real']].map(([n, l]) => (
+              <div key={n}>
+                <div style={{ fontFamily: 'Poppins', fontSize: 20, fontWeight: 800, color: C.magenta }}>{n}</div>
+                <div style={{ fontFamily: 'Montserrat', fontSize: 11, color: 'rgba(253,253,253,0.3)',
+                  marginTop: 5, lineHeight: 1.4, maxWidth: 100, textTransform: 'uppercase', letterSpacing: '0.06em' }}>{l}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Right */}
+        <div style={{ position: 'relative', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+          <div className="glass" style={{ width: 360, height: 440, borderRadius: 63,
+            display: 'flex', flexDirection: 'column',
+            alignItems: 'center', justifyContent: 'center', gap: 18, position: 'relative', overflow: 'hidden' }}>
+            <div className="scan-line" />
+            <div style={{ position: 'absolute', inset: 0,
+              background: 'radial-gradient(ellipse at 50% 10%, rgba(255,28,247,0.2) 0%, transparent 60%)' }} />
+            <div style={{ fontFamily: 'Space Mono', fontSize: 11, color: C.magenta, opacity: 0.6, letterSpacing: '0.06em' }}>
+              NL — Laboratório Digital
+            </div>
+            <NMark size={80} color={C.fg} dotColor={C.magenta} />
+            <div style={{ width: 48, height: 2, background: C.magenta, borderRadius: 1 }} />
+            <p style={{ fontFamily: 'Poppins', fontSize: 13, fontWeight: 300,
+              color: 'rgba(253,253,253,0.4)', textAlign: 'center', maxWidth: 200, lineHeight: 1.6 }}>
+              Marketing inteligente para marcas que recusam o ordinário.
+            </p>
+          </div>
+
+          {/* Floating insight */}
+          <div className="glass" style={{ position: 'absolute', bottom: -14, right: -16,
+            borderRadius: 20, padding: '14px 18px', minWidth: 170 }}>
+            <div style={{ fontFamily: 'Montserrat', fontSize: 9, fontWeight: 600,
+              letterSpacing: '0.12em', textTransform: 'uppercase', color: C.magenta, marginBottom: 6 }}>
+              Insight do dia
+            </div>
+            <div style={{ fontFamily: 'Poppins', fontSize: 18, fontWeight: 800,
+              fontStyle: 'italic', color: C.fg, lineHeight: 1.1 }}>
+              Dados não<br/>mentem.
+            </div>
+            <div style={{ fontFamily: 'Space Mono', fontSize: 11, color: C.muted, marginTop: 6 }}>
+              @novlab
+            </div>
+          </div>
+
+          {/* Top tag */}
+          <div style={{ position: 'absolute', top: 20, left: -10,
+            background: C.magenta, borderRadius: 9999, padding: '8px 18px' }}>
+            <div style={{ fontFamily: 'Montserrat', fontSize: 11, fontWeight: 600,
+              color: '#0F041A', letterSpacing: '0.04em' }}>
+              Ousada. Precisa. Visionária.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ConceitoScreen({ cardStyle, heroStyle }) {
+  const pilares = [
+    { titulo: 'Inteligência', desc: 'IA e automação no centro de cada estratégia. Dados que guiam decisões — nada por acaso.' },
+    { titulo: 'Resultado',    desc: 'Marketing que não é achismo — é ciência. Métricas reais, impacto real.' },
+    { titulo: 'Inovação',     desc: 'Sempre à frente. Quebrar padrões com propósito e criatividade.' },
+  ];
+  const personalidade = ['Ousada', 'Precisa', 'Visionária', 'Direta', 'Tecnológica', 'Confiante'];
+  const cardBg = cardStyle === 'border' ? 'transparent' : C.purple;
+  const cardBorder = `2px solid ${C.border}`;
+
+  return (
+    <div style={{ minHeight: '100vh', paddingTop: 70, overflowY: 'auto' }}>
+      <div style={{ maxWidth: 1200, margin: '0 auto', padding: '72px 64px 80px' }}>
+
+        {/* Manifesto */}
+        <div style={{ marginBottom: 64 }}>
+          <Tag>Essência da Marca</Tag>
+          <blockquote style={{ fontFamily: 'Poppins', fontSize: 40, fontWeight: 900,
+            fontStyle: heroStyle === 'italic' ? 'italic' : 'normal',
+            color: C.fg, lineHeight: 1.15, marginTop: 24, maxWidth: 680 }}>
+            "Em um laboratório,<br/>
+            <span style={{ color: C.magenta }}>nada é por acaso.</span><br/>
+            Cada dado tem significado,<br/>cada ação gera resultado."
+          </blockquote>
+          <div style={{ fontFamily: 'Space Mono', fontSize: 12, color: 'rgba(253,253,253,0.25)', marginTop: 14 }}>
+            — NOV Lab Manifesto
+          </div>
+        </div>
+
+        {/* 3 Pilares */}
+        <div style={{ marginBottom: 32 }}>
+          <div style={{ fontFamily: 'Montserrat', fontSize: 11, fontWeight: 600,
+            letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(253,253,253,0.25)',
+            marginBottom: 24 }}>Os 3 Pilares da Marca</div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 18 }}>
+            {pilares.map((p, i) => (
+              <div key={i} className="glass" style={{ background: cardBg, borderRadius: 32, padding: '28px 26px',
+                border: cardBorder, transition: 'all 0.25s', cursor: 'default' }}
+                onMouseEnter={e => { e.currentTarget.style.borderColor = C.magenta; e.currentTarget.style.transform = 'translateY(-4px)'; }}
+                onMouseLeave={e => { e.currentTarget.style.borderColor = C.border; e.currentTarget.style.transform = 'translateY(0)'; }}
+              >
+                <div style={{ width: 32, height: 3, background: C.magenta, borderRadius: 2, marginBottom: 18 }} />
+                <div style={{ fontFamily: 'Poppins', fontSize: 22, fontWeight: 800, color: C.fg, marginBottom: 10 }}>{p.titulo}</div>
+                <div style={{ fontFamily: 'Poppins', fontSize: 13, fontWeight: 300, color: C.muted, lineHeight: 1.65 }}>{p.desc}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Personalidade + Tom de voz */}
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 18, marginTop: 18 }}>
+          <div className="glass" style={{ background: cardBg, borderRadius: 32, padding: '26px 30px', border: cardBorder }}>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10 }}>
+              {personalidade.map(p => <Tag key={p}>{p}</Tag>)}
+            </div>
+          </div>
+          <div className="glass" style={{ background: cardBg, borderRadius: 32, padding: '26px 30px', border: cardBorder }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+              <div>
+                <div style={{ fontFamily: 'Montserrat', fontSize: 10, fontWeight: 600, color: C.magenta,
+                  textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 10 }}>✓ SIM</div>
+                {['Direto e confiante', 'Baseado em dados', 'Futurista e inspirador', 'Técnico quando necessário'].map(t => (
+                  <div key={t} style={{ fontFamily: 'Poppins', fontSize: 12, fontWeight: 300, color: C.muted, marginBottom: 6 }}>{t}</div>
+                ))}
+              </div>
+              <div>
+                <div style={{ fontFamily: 'Montserrat', fontSize: 10, fontWeight: 600,
+                  color: 'rgba(253,253,253,0.3)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 10 }}>✗ NÃO</div>
+                {['Jargões sem sentido', 'Promessas vazias', 'Linguagem passiva', 'Excessivamente formal'].map(t => (
+                  <div key={t} style={{ fontFamily: 'Poppins', fontSize: 12, fontWeight: 300, color: 'rgba(253,253,253,0.25)', marginBottom: 6 }}>{t}</div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ServicosScreen({ cardStyle, heroStyle }) {
+  const cardBg = cardStyle === 'border' ? 'transparent' : C.purple;
+  const servicos = [
+    { tag: 'Web',     titulo: 'Landing Pages',      desc: 'Páginas que convertem visitantes em clientes reais.' },
+    { tag: 'Social',  titulo: 'Social Media',        desc: 'Carrosséis e posts estáticos que param o scroll.' },
+    { tag: 'Vídeo',   titulo: 'Reels & Vídeos',      desc: 'Edição com corte certeiro e impacto visual.' },
+    { tag: 'Tráfego', titulo: 'Google & Meta Ads',   desc: 'Gestão de tráfego pago com foco em resultado.' },
+    { tag: 'Marca',   titulo: 'Identidade Visual',   desc: 'Branding estratégico para marcas com ambição.' },
+    { tag: 'Design',  titulo: 'Peças Estáticas',     desc: 'Arte para cada formato com precisão.' },
+  ];
+  return (
+    <div style={{ minHeight: '100vh', paddingTop: 70 }}>
+      <div style={{ maxWidth: 1200, margin: '0 auto', padding: '72px 64px' }}>
+        <Tag>O que fazemos</Tag>
+        <h2 style={{ fontFamily: 'Poppins', fontSize: 54, fontWeight: 900,
+          fontStyle: heroStyle === 'italic' ? 'italic' : 'normal',
+          color: C.fg, marginTop: 18, marginBottom: 44, lineHeight: 1.0 }}>
+          Serviços que<br/><span style={{ color: C.magenta }}>geram resultado.</span>
+        </h2>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 18 }}>
+          {servicos.map((s, i) => (
+            <div key={i} className="glass" style={{ background: cardBg, borderRadius: 32, padding: '28px 26px',
+              border: `2px solid ${C.border}`, transition: 'all 0.25s', cursor: 'default' }}
+              onMouseEnter={e => { e.currentTarget.style.borderColor = C.magenta; e.currentTarget.style.transform = 'translateY(-4px)'; }}
+              onMouseLeave={e => { e.currentTarget.style.borderColor = C.border; e.currentTarget.style.transform = 'translateY(0)'; }}
+            >
+              <Tag>{s.tag}</Tag>
+              <div style={{ fontFamily: 'Poppins', fontSize: 20, fontWeight: 700,
+                color: C.fg, margin: '14px 0 10px', lineHeight: 1.1 }}>{s.titulo}</div>
+              <div style={{ fontFamily: 'Poppins', fontSize: 13, fontWeight: 300,
+                color: C.muted, lineHeight: 1.6 }}>{s.desc}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ContatoScreen({ heroStyle }) {
+  return (
+    <div style={{ minHeight: '100vh', paddingTop: 70,
+      display: 'flex', alignItems: 'center' }}>
+      <div style={{ maxWidth: 640, margin: '0 auto', padding: '80px 64px', width: '100%' }}>
+        <Tag>Vamos conversar</Tag>
+        <h2 style={{ fontFamily: 'Poppins', fontSize: 54, fontWeight: 900,
+          fontStyle: heroStyle === 'italic' ? 'italic' : 'normal',
+          color: C.fg, marginTop: 20, marginBottom: 12, lineHeight: 1.0 }}>
+          O futuro<br/><span style={{ color: C.magenta }}>começa aqui.</span>
+        </h2>
+        <p style={{ fontFamily: 'Poppins', fontSize: 15, fontWeight: 300,
+          color: C.muted, lineHeight: 1.7, marginBottom: 36 }}>
+          Marketing inteligente para marcas que recusam o ordinário e constroem o futuro. Fale com a nossa equipe.
+        </p>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+          {['Seu nome', 'contato@suamarca.com.br', 'Qual serviço você precisa?'].map((ph, i) => (
+            <input key={i} placeholder={ph} style={{
+              background: 'rgba(42,10,74,0.3)', backdropFilter: 'blur(14px)', border: `2px solid ${C.border}`,
+              borderRadius: 16, padding: '16px 20px', fontSize: 15,
+              fontWeight: 300, color: C.fg, outline: 'none', width: '100%',
+              transition: 'border-color 0.15s',
+            }}
+            onFocus={e => e.target.style.borderColor = C.magenta}
+            onBlur={e => e.target.style.borderColor = C.border}
+            />
+          ))}
+          <div style={{ marginTop: 8 }}>
+            <Btn size="lg">Enviar mensagem</Btn>
+          </div>
+        </div>
+
+        <div style={{ marginTop: 48, paddingTop: 32, borderTop: `1px solid ${C.border}`,
+          display: 'flex', gap: 40 }}>
+          {[['E-mail', 'contato.novlab@gmail.com'], ['Site', 'novlab.com.br'], ['Instagram', '@no.vlab']].map(([label, val]) => (
+            <div key={label}>
+              <div style={{ fontFamily: 'Montserrat', fontSize: 10, fontWeight: 600,
+                color: 'rgba(253,253,253,0.25)', textTransform: 'uppercase',
+                letterSpacing: '0.1em', marginBottom: 5 }}>{label}</div>
+              <div style={{ fontFamily: 'Space Mono', fontSize: 13, color: C.magenta }}>{val}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── APP ───
+const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+  "screen": "home",
+  "cardStyle": "purple",
+  "heroStyle": "italic"
+}/*EDITMODE-END*/;
+
+function App() {
+  const saved = localStorage.getItem('novlab2-screen') || TWEAK_DEFAULTS.screen;
+  const [screen, setScreen] = useState(saved);
+  const [cardStyle, setCardStyle] = useState(TWEAK_DEFAULTS.cardStyle);
+  const [heroStyle, setHeroStyle] = useState(TWEAK_DEFAULTS.heroStyle);
+
+  useEffect(() => {
+    localStorage.setItem('novlab2-screen', screen);
+    const sel = document.getElementById('tw-screen');
+    if (sel) sel.value = screen;
+  }, [screen]);
+
+  useEffect(() => {
+    window._setScreen = setScreen;
+    window._setCards = setCardStyle;
+    window._setHero = setHeroStyle;
+  }, []);
+
+  const screens = { home: HomeScreen, conceito: ConceitoScreen, servicos: ServicosScreen, contato: ContatoScreen };
+  const Screen = screens[screen] || HomeScreen;
+
+  return (
+    <div className="nov-bg nov-bg-radial" style={{ height: '100vh', overflowY: 'auto', position: 'relative' }}>
+      <div className="tech-grid" />
+      <div className="orb orb1" /><div className="orb orb2" /><div className="orb orb3" />
+      <Nav onNav={setScreen} current={screen} />
+      <Screen cardStyle={cardStyle} heroStyle={heroStyle} />
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+
+<script>
+window.addEventListener('message', e => {
+  if (e.data?.type === '__activate_edit_mode') document.getElementById('tweaks-panel').classList.add('open');
+  if (e.data?.type === '__deactivate_edit_mode') document.getElementById('tweaks-panel').classList.remove('open');
+});
+window.parent.postMessage({ type: '__edit_mode_available' }, '*');
+
+function setCards(v) {
+  ['purple','border'].forEach(k => document.getElementById('tw-'+k)?.classList.toggle('active', k===v));
+  if (window._setCards) window._setCards(v);
+  window.parent.postMessage({ type: '__edit_mode_set_keys', edits: { cardStyle: v } }, '*');
+}
+function setHero(v) {
+  ['italic','normal'].forEach(k => document.getElementById('tw-'+k)?.classList.toggle('active', k===v));
+  if (window._setHero) window._setHero(v);
+  window.parent.postMessage({ type: '__edit_mode_set_keys', edits: { heroStyle: v } }, '*');
+}
+document.getElementById('tw-screen').addEventListener('change', function() {
+  if (window._setScreen) window._setScreen(this.value);
+});
+</script>
+</body>
+</html>
