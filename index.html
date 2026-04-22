@@ -1,0 +1,895 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NOV Lab — Marketing é ciência.</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,300;0,400;0,500;0,700;0,800;1,900&family=Montserrat:wght@400;600&family=Space+Mono:wght@400&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body { background: #0F041A; font-family: 'Poppins', sans-serif; color: #FDFDFD; overflow-x: hidden; }
+
+  input { -webkit-appearance: none; font-family: 'Poppins', sans-serif; }
+  input::placeholder { color: rgba(253,253,253,0.25); }
+  button { font-family: 'Poppins', sans-serif; }
+
+  @keyframes gradMove {
+    0%   { background-position: 0% 50%; }
+    50%  { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+  .nov-bg {
+    background: linear-gradient(135deg, #0F041A 0%, #1a0630 25%, #2A0A4A 50%, #1a0230 75%, #0F041A 100%);
+    background-size: 400% 400%;
+    animation: gradMove 12s ease infinite;
+  }
+  .nov-bg-radial::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    background:
+      radial-gradient(ellipse 60% 50% at 20% 30%, rgba(255,28,247,0.07) 0%, transparent 70%),
+      radial-gradient(ellipse 50% 60% at 80% 70%, rgba(42,10,74,0.6) 0%, transparent 70%);
+    animation: radialDrift 18s ease-in-out infinite alternate;
+  }
+  @keyframes radialDrift {
+    0%   { opacity: 1; transform: scale(1) translate(0, 0); }
+    50%  { opacity: 0.8; transform: scale(1.1) translate(2%, 3%); }
+    100% { opacity: 1; transform: scale(1) translate(-2%, -2%); }
+  }
+
+  .tech-grid {
+    position: fixed; inset: 0; pointer-events: none; z-index: 0;
+    background-image:
+      linear-gradient(rgba(255,28,247,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,28,247,0.04) 1px, transparent 1px);
+    background-size: 48px 48px;
+    mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 40%, transparent 100%);
+  }
+
+  .glass {
+    background: rgba(42,10,74,0.3) !important;
+    backdrop-filter: blur(20px) saturate(160%);
+    -webkit-backdrop-filter: blur(20px) saturate(160%);
+    border: 1px solid rgba(255,28,247,0.18) !important;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.06) !important;
+  }
+  .glass:hover {
+    border-color: rgba(255,28,247,0.5) !important;
+    box-shadow: 0 0 28px rgba(255,28,247,0.12), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.08) !important;
+    transform: translateY(-4px);
+  }
+
+  @keyframes scanLine {
+    0%   { top: -4px; opacity: 0; }
+    5%   { opacity: 1; }
+    95%  { opacity: 1; }
+    100% { top: 100%; opacity: 0; }
+  }
+  .scan-line {
+    position: absolute; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, transparent, rgba(255,28,247,0.55), transparent);
+    animation: scanLine 4s linear infinite;
+    pointer-events: none; z-index: 2;
+  }
+
+  @keyframes orbFloat1 { 0%,100%{transform:translate(0,0) scale(1);} 50%{transform:translate(28px,-36px) scale(1.07);} }
+  @keyframes orbFloat2 { 0%,100%{transform:translate(0,0) scale(1);} 50%{transform:translate(-22px,28px) scale(0.94);} }
+  @keyframes orbFloat3 { 0%,100%{transform:translate(0,0) scale(1);} 50%{transform:translate(16px,18px) scale(1.04);} }
+  .orb { position: fixed; border-radius: 50%; filter: blur(80px); pointer-events: none; z-index: 0; }
+  .orb1 { width:340px;height:340px;background:#FF1CF7;top:-80px;left:8%;opacity:0.2;animation:orbFloat1 14s ease-in-out infinite; }
+  .orb2 { width:280px;height:280px;background:#2A0A4A;bottom:4%;right:6%;opacity:0.45;animation:orbFloat2 18s ease-in-out infinite; }
+  .orb3 { width:200px;height:200px;background:#FF1CF7;top:42%;right:20%;opacity:0.08;animation:orbFloat3 22s ease-in-out infinite; }
+
+  @keyframes ticker { 0%{transform:translateX(0);} 100%{transform:translateX(-50%);} }
+  .ticker-wrap { overflow: hidden; white-space: nowrap; border-top: 1px solid rgba(255,28,247,0.12); border-bottom: 1px solid rgba(255,28,247,0.12); padding: 9px 0; }
+  .ticker-inner { display: inline-block; animation: ticker 24s linear infinite; }
+  .ticker-inner span { margin: 0 36px; font-family: 'Space Mono',monospace; font-size: 11px; color: rgba(255,28,247,0.45); letter-spacing: 0.04em; }
+
+  /* ── Nav responsivo ── */
+  .nav-links { display: flex; gap: 40px; }
+  .nav-cta-wrap { display: block; }
+  .nav-hamburger {
+    display: none; flex-direction: column; gap: 5px;
+    align-items: center; justify-content: center;
+    background: none; border: none; cursor: pointer; padding: 6px;
+  }
+  .nav-hamburger span {
+    display: block; width: 22px; height: 2px;
+    background: rgba(253,253,253,0.75); border-radius: 2px; transition: all 0.22s;
+  }
+  .nav-mobile-menu {
+    display: none; position: fixed; top: 70px; left: 0; right: 0;
+    background: rgba(15,4,26,0.97); backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(255,28,247,0.18);
+    flex-direction: column; padding: 16px 24px 24px; gap: 0; z-index: 99;
+  }
+  .nav-mobile-menu.open { display: flex; }
+  .nav-mobile-item {
+    background: none; border: none; border-bottom: 1px solid rgba(255,28,247,0.08);
+    cursor: pointer; text-align: left; padding: 14px 8px;
+    font-family: 'Montserrat', sans-serif; font-size: 15px; font-weight: 600;
+    color: rgba(253,253,253,0.55); letter-spacing: 0.03em; transition: color 0.15s;
+  }
+  .nav-mobile-item:last-of-type { border-bottom: none; }
+  .nav-mobile-item:hover, .nav-mobile-item.active { color: #FF1CF7; }
+  .nav-mobile-cta { padding-top: 16px; }
+
+  @media (max-width: 768px) {
+    .nav-links { display: none; }
+    .nav-cta-wrap { display: none; }
+    .nav-hamburger { display: flex; }
+    .orb1 { width: 200px; height: 200px; opacity: 0.15; }
+    .orb2 { width: 160px; height: 160px; }
+    .orb3 { display: none; }
+  }
+
+  #tweaks-panel {
+    display: none; position: fixed; bottom: 24px; right: 24px;
+    background: #1a0630; border: 1.5px solid rgba(255,28,247,0.3);
+    border-radius: 20px; padding: 20px; z-index: 9999; width: 220px;
+  }
+  #tweaks-panel.open { display: block; }
+  .tw-title { font-family: 'Montserrat'; font-size: 11px; font-weight: 600; color: rgba(253,253,253,0.35); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 16px; }
+  .tw-label { font-family: 'Montserrat'; font-size: 10px; color: rgba(253,253,253,0.3); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px; }
+  .tw-row { margin-bottom: 14px; }
+  .tw-select { width: 100%; background: #2A0A4A; border: 1.5px solid rgba(255,28,247,0.2); color: #FDFDFD; font-family: 'Poppins'; font-size: 12px; border-radius: 10px; padding: 6px 10px; outline: none; cursor: pointer; }
+  .tw-toggle { display: flex; border: 1.5px solid rgba(255,28,247,0.2); border-radius: 10px; overflow: hidden; }
+  .tw-toggle button { flex: 1; background: transparent; color: rgba(253,253,253,0.35); font-family: 'Montserrat'; font-size: 11px; border: none; padding: 6px 0; cursor: pointer; transition: all 0.15s; }
+  .tw-toggle button.active { background: #FF1CF7; color: #0F041A; font-weight: 600; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<div id="tweaks-panel">
+  <div class="tw-title">Tweaks</div>
+  <div class="tw-row">
+    <div class="tw-label">Seção</div>
+    <select class="tw-select" id="tw-screen">
+      <option value="home">Hero</option>
+      <option value="conceito">Conceito</option>
+      <option value="servicos">Serviços</option>
+      <option value="contato">Contato</option>
+    </select>
+  </div>
+  <div class="tw-row">
+    <div class="tw-label">Cards</div>
+    <div class="tw-toggle">
+      <button class="active" id="tw-purple" onclick="setCards('purple')">Roxo</button>
+      <button id="tw-border" onclick="setCards('border')">Borda</button>
+    </div>
+  </div>
+  <div class="tw-row">
+    <div class="tw-label">Hero title</div>
+    <div class="tw-toggle">
+      <button class="active" id="tw-italic" onclick="setHero('italic')">Itálico</button>
+      <button id="tw-normal" onclick="setHero('normal')">Normal</button>
+    </div>
+  </div>
+</div>
+
+<script type="text/babel">
+const { useState, useEffect } = React;
+
+// ─── TOKENS ───
+const C = {
+  bg:      '#0F041A',
+  purple:  'rgba(42,10,74,0.75)',
+  magenta: '#FF1CF7',
+  fg:      '#FDFDFD',
+  muted:   'rgba(253,253,253,0.55)',
+  border:  'rgba(255,28,247,0.25)',
+};
+
+// ─── BREAKPOINT HOOK ───
+function useBreakpoint() {
+  const [w, setW] = useState(window.innerWidth);
+  useEffect(() => {
+    const h = () => setW(window.innerWidth);
+    window.addEventListener('resize', h);
+    return () => window.removeEventListener('resize', h);
+  }, []);
+  return {
+    isMobile:  w < 640,
+    isTablet:  w >= 640 && w < 1024,
+    isDesktop: w >= 1024,
+    w,
+  };
+}
+
+// ─── ATOMS ───
+function NMark({ size = 48, color = '#FDFDFD', dotColor = '#FF1CF7' }) {
+  const scale = size / 212.4;
+  const w = 241.2 * scale;
+  const dotR = 18 * scale;
+  return (
+    <div style={{ position: 'relative', width: w + dotR, height: size + dotR * 0.5, display: 'inline-block' }}>
+      <svg width={w} height={size} viewBox="0 0 241.2 212.4" style={{ display: 'block' }}>
+        <path d="M 203.7 212.4 L 137.1 212.4 L 66.6 30.9 L 66.6 212.4 L 0 212.4 L 37.5 0 L 104.1 0 L 155 191.4 L 174.6 0 L 241.2 0 L 203.7 212.4 Z"
+          fill={color} fillRule="nonzero" />
+      </svg>
+      <div style={{
+        position: 'absolute', bottom: 0, right: 0,
+        width: dotR * 2, height: dotR * 2,
+        borderRadius: '50%', background: dotColor,
+      }} />
+    </div>
+  );
+}
+
+function Logo({ size = 32 }) {
+  return (
+    <div style={{ display: 'flex', alignItems: 'baseline', userSelect: 'none' }}>
+      <span style={{ fontFamily: 'Poppins', fontSize: size, fontWeight: 900, fontStyle: 'italic', color: C.fg, lineHeight: 1 }}>NOV</span>
+      <span style={{ fontFamily: 'Poppins', fontSize: size, fontWeight: 100, color: C.fg, lineHeight: 1 }}>Lab</span>
+      <span style={{ fontFamily: 'Poppins', fontSize: size, fontWeight: 100, color: C.magenta, lineHeight: 1 }}>.</span>
+    </div>
+  );
+}
+
+function Btn({ children, variant = 'primary', size = 'md', onClick }) {
+  const [hov, setHov] = useState(false);
+  const pad = size === 'sm' ? '10px 24px' : size === 'lg' ? '17px 42px' : '13px 32px';
+  const fs  = size === 'sm' ? 13 : size === 'lg' ? 16 : 14;
+  let bg, color, border;
+  if (variant === 'primary') {
+    bg = C.magenta; color = '#0F041A'; border = 'none';
+    if (hov) bg = 'rgba(255,28,247,0.85)';
+  } else if (variant === 'outline') {
+    bg = hov ? 'rgba(255,28,247,0.08)' : 'transparent';
+    color = C.magenta; border = `2px solid ${C.magenta}`;
+  } else {
+    bg = hov ? '#1e0535' : C.purple;
+    color = C.muted; border = `1.5px solid ${C.border}`;
+  }
+  return (
+    <button onClick={onClick}
+      onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}
+      style={{ background: bg, color, border, fontFamily: 'Poppins', fontSize: fs, fontWeight: 600,
+        borderRadius: 9999, padding: pad, cursor: 'pointer', transition: 'all 0.15s',
+        display: 'inline-flex', alignItems: 'center', gap: 8 }}
+    >{children}</button>
+  );
+}
+
+function Tag({ children }) {
+  return (
+    <span style={{ fontFamily: 'Montserrat', fontSize: 10, fontWeight: 600, letterSpacing: '0.1em',
+      textTransform: 'uppercase', borderRadius: 9999, padding: '5px 14px',
+      background: 'rgba(255,28,247,0.12)', color: C.magenta,
+      border: `1px solid rgba(255,28,247,0.25)`, display: 'inline-block' }}
+    >{children}</span>
+  );
+}
+
+// ─── NAV ───
+function Nav({ onNav, current }) {
+  const [menuOpen, setMenuOpen] = useState(false);
+  const links = [
+    { key: 'home',     label: 'Início'   },
+    { key: 'conceito', label: 'Conceito' },
+    { key: 'servicos', label: 'Serviços' },
+    { key: 'contato',  label: 'Contato'  },
+  ];
+
+  function go(key) { onNav(key); setMenuOpen(false); }
+
+  return (
+    <>
+      <nav style={{ position: 'fixed', top: 0, left: 0, right: 0, height: 70,
+        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+        padding: '0 24px', background: 'rgba(15,4,26,0.75)', backdropFilter: 'blur(20px)',
+        borderBottom: `1px solid ${C.border}`, zIndex: 100 }}>
+        <Logo size={26} />
+
+        {/* Desktop links */}
+        <div className="nav-links">
+          {links.map(l => (
+            <button key={l.key} onClick={() => go(l.key)} style={{
+              background: 'none', border: 'none', cursor: 'pointer',
+              fontFamily: 'Montserrat', fontSize: 13, fontWeight: 600,
+              color: current === l.key ? C.magenta : C.muted,
+              letterSpacing: '0.03em', transition: 'color 0.15s', padding: 0,
+            }}
+            onMouseEnter={e => e.currentTarget.style.color = C.magenta}
+            onMouseLeave={e => e.currentTarget.style.color = current === l.key ? C.magenta : C.muted}
+            >{l.label}</button>
+          ))}
+        </div>
+
+        {/* Desktop CTA */}
+        <div className="nav-cta-wrap">
+          <Btn size="sm" onClick={() => go('contato')}>Falar com a gente</Btn>
+        </div>
+
+        {/* Hamburger */}
+        <button className="nav-hamburger" onClick={() => setMenuOpen(o => !o)} aria-label="Menu">
+          <span style={{ transform: menuOpen ? 'translateY(7px) rotate(45deg)' : 'none' }} />
+          <span style={{ opacity: menuOpen ? 0 : 1 }} />
+          <span style={{ transform: menuOpen ? 'translateY(-7px) rotate(-45deg)' : 'none' }} />
+        </button>
+      </nav>
+
+      {/* Mobile menu */}
+      <div className={`nav-mobile-menu${menuOpen ? ' open' : ''}`}>
+        {links.map(l => (
+          <button key={l.key} className={`nav-mobile-item${current === l.key ? ' active' : ''}`}
+            onClick={() => go(l.key)}>{l.label}</button>
+        ))}
+        <div className="nav-mobile-cta">
+          <Btn size="sm" onClick={() => go('contato')}>Falar com a gente</Btn>
+        </div>
+      </div>
+    </>
+  );
+}
+
+// ─── PLANS MODAL ───
+function PlansModal({ onClose }) {
+  const { isMobile } = useBreakpoint();
+  const [hov1, setHov1] = React.useState(false);
+  const [hov2, setHov2] = React.useState(false);
+
+  React.useEffect(() => {
+    const handleKey = e => { if (e.key === 'Escape') onClose(); };
+    window.addEventListener('keydown', handleKey);
+    return () => window.removeEventListener('keydown', handleKey);
+  }, [onClose]);
+
+  const featureItem = (text) => (
+    <div key={text} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 11 }}>
+      <div style={{ width: 18, height: 18, borderRadius: '50%', background: 'rgba(255,28,247,0.15)',
+        border: '1px solid rgba(255,28,247,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center',
+        flexShrink: 0 }}>
+        <svg width="9" height="7" viewBox="0 0 9 7" fill="none">
+          <path d="M1 3.5L3.5 6L8 1" stroke="#FF1CF7" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+        </svg>
+      </div>
+      <span style={{ fontFamily: 'Poppins', fontSize: 13, fontWeight: 300, color: 'rgba(253,253,253,0.75)', lineHeight: 1.5 }}>{text}</span>
+    </div>
+  );
+
+  const cardBase = {
+    borderRadius: 28, padding: isMobile ? '28px 22px' : '32px 28px',
+    display: 'flex', flexDirection: 'column',
+    transition: 'all 0.25s', cursor: 'default', position: 'relative',
+  };
+
+  return (
+    <div onClick={onClose} style={{
+      position: 'fixed', inset: 0, zIndex: 200,
+      background: 'rgba(15,4,26,0.82)', backdropFilter: 'blur(8px)',
+      display: 'flex', alignItems: isMobile ? 'flex-end' : 'center', justifyContent: 'center',
+      padding: isMobile ? '0' : '24px 16px',
+      animation: 'fadeInModal 0.22s ease',
+    }}>
+      <style>{`
+        @keyframes fadeInModal { from { opacity: 0; transform: translateY(28px); } to { opacity: 1; transform: translateY(0); } }
+      `}</style>
+      <div onClick={e => e.stopPropagation()} style={{
+        width: '100%', maxWidth: isMobile ? '100%' : 840,
+        background: 'rgba(26,6,48,0.97)', border: '1px solid rgba(255,28,247,0.22)',
+        borderRadius: isMobile ? '28px 28px 0 0' : 40,
+        padding: isMobile ? '32px 20px 28px' : '44px 40px 40px',
+        boxShadow: '0 32px 80px rgba(0,0,0,0.6)',
+        position: 'relative',
+        maxHeight: isMobile ? '90vh' : 'none',
+        overflowY: isMobile ? 'auto' : 'visible',
+      }}>
+        {/* Close */}
+        <button onClick={onClose} style={{
+          position: 'absolute', top: 16, right: 16, background: 'rgba(255,28,247,0.08)',
+          border: '1px solid rgba(255,28,247,0.2)', borderRadius: '50%', width: 36, height: 36,
+          cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
+          color: 'rgba(253,253,253,0.5)', fontSize: 18, lineHeight: 1, transition: 'all 0.15s',
+        }}
+        onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,28,247,0.18)'; e.currentTarget.style.color = '#FDFDFD'; }}
+        onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,28,247,0.08)'; e.currentTarget.style.color = 'rgba(253,253,253,0.5)'; }}
+        >×</button>
+
+        {/* Header */}
+        <div style={{ textAlign: 'center', marginBottom: isMobile ? 24 : 36 }}>
+          <Tag>Planos</Tag>
+          <h2 style={{ fontFamily: 'Poppins', fontSize: isMobile ? 26 : 34, fontWeight: 900, fontStyle: 'italic',
+            color: '#FDFDFD', marginTop: 14, lineHeight: 1.1 }}>
+            Escolha o seu<br/><span style={{ color: C.magenta }}>pacote ideal.</span>
+          </h2>
+        </div>
+
+        {/* Cards */}
+        <div style={{ display: 'flex', flexDirection: isMobile ? 'column' : 'row', gap: isMobile ? 24 : 20 }}>
+
+          {/* Pacote 1 — Entrada */}
+          <div
+            onMouseEnter={() => setHov1(true)}
+            onMouseLeave={() => setHov1(false)}
+            style={{ ...cardBase,
+              flex: isMobile ? 'none' : 1,
+              background: hov1 ? 'rgba(42,10,74,0.55)' : 'rgba(42,10,74,0.3)',
+              border: `2px solid ${hov1 ? 'rgba(255,28,247,0.45)' : 'rgba(255,28,247,0.2)'}`,
+              transform: hov1 ? 'translateY(-4px)' : 'translateY(0)',
+              boxShadow: hov1 ? '0 16px 40px rgba(255,28,247,0.08)' : 'none',
+            }}>
+            <div style={{ fontFamily: 'Montserrat', fontSize: 10, fontWeight: 600, letterSpacing: '0.12em',
+              textTransform: 'uppercase', color: 'rgba(253,253,253,0.35)', marginBottom: 6 }}>
+              Pacote Entrada
+            </div>
+            <div style={{ fontFamily: 'Poppins', fontSize: 22, fontWeight: 800, color: '#FDFDFD', marginBottom: 4 }}>
+              Essencial
+            </div>
+            <div style={{ display: 'flex', alignItems: 'baseline', gap: 4, marginBottom: 4 }}>
+              <span style={{ fontFamily: 'Poppins', fontSize: 13, fontWeight: 400, color: 'rgba(253,253,253,0.4)' }}>R$</span>
+              <span style={{ fontFamily: 'Poppins', fontSize: 40, fontWeight: 900, color: '#FDFDFD', lineHeight: 1 }}>2.500</span>
+            </div>
+            <div style={{ fontFamily: 'Montserrat', fontSize: 10, fontWeight: 600, letterSpacing: '0.08em',
+              textTransform: 'uppercase', color: 'rgba(253,253,253,0.3)', marginBottom: 24 }}>/mês</div>
+
+            <div style={{ flex: 1 }}>
+              {['8 vídeos curtos editados (Reels/TikTok)', '1 relatório mensal de performance', 'Briefing e roteiro inclusos'].map(featureItem)}
+            </div>
+
+            <button style={{
+              marginTop: 24, width: '100%', padding: '13px 0', borderRadius: 9999,
+              background: 'transparent', border: `2px solid ${C.magenta}`,
+              color: C.magenta, fontFamily: 'Poppins', fontSize: 14, fontWeight: 600,
+              cursor: 'pointer', transition: 'all 0.15s',
+            }}
+            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,28,247,0.1)'; }}
+            onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; }}
+            >Quero este plano</button>
+          </div>
+
+          {/* Pacote 2 — Crescimento */}
+          <div
+            onMouseEnter={() => setHov2(true)}
+            onMouseLeave={() => setHov2(false)}
+            style={{ ...cardBase,
+              flex: isMobile ? 'none' : 1,
+              marginTop: isMobile ? 0 : 0,
+              background: hov2 ? 'rgba(255,28,247,0.14)' : 'rgba(255,28,247,0.07)',
+              border: `2px solid ${hov2 ? C.magenta : 'rgba(255,28,247,0.5)'}`,
+              transform: hov2 ? 'translateY(-4px)' : 'translateY(0)',
+              boxShadow: hov2 ? '0 16px 40px rgba(255,28,247,0.15)' : 'none',
+            }}>
+            <div style={{ position: 'absolute', top: -14, left: '50%', transform: 'translateX(-50%)',
+              background: C.magenta, borderRadius: 9999, padding: '5px 18px',
+              fontFamily: 'Montserrat', fontSize: 10, fontWeight: 700, letterSpacing: '0.1em',
+              textTransform: 'uppercase', color: '#0F041A', whiteSpace: 'nowrap' }}>
+              ✦ Recomendado
+            </div>
+
+            <div style={{ fontFamily: 'Montserrat', fontSize: 10, fontWeight: 600, letterSpacing: '0.12em',
+              textTransform: 'uppercase', color: 'rgba(255,28,247,0.6)', marginBottom: 6 }}>
+              Pacote Crescimento
+            </div>
+            <div style={{ fontFamily: 'Poppins', fontSize: 22, fontWeight: 800, color: '#FDFDFD', marginBottom: 4 }}>
+              Crescimento
+            </div>
+            <div style={{ display: 'flex', alignItems: 'baseline', gap: 4, marginBottom: 4 }}>
+              <span style={{ fontFamily: 'Poppins', fontSize: 13, fontWeight: 400, color: 'rgba(253,253,253,0.4)' }}>R$</span>
+              <span style={{ fontFamily: 'Poppins', fontSize: 40, fontWeight: 900, color: '#FDFDFD', lineHeight: 1 }}>5.500</span>
+            </div>
+            <div style={{ fontFamily: 'Montserrat', fontSize: 10, fontWeight: 600, letterSpacing: '0.08em',
+              textTransform: 'uppercase', color: 'rgba(253,253,253,0.3)', marginBottom: 24 }}>/mês</div>
+
+            <div style={{ flex: 1 }}>
+              {['16 vídeos curtos + 2 vídeos longos (YouTube)', 'Gestão de redes sociais inclusa', 'Estratégia de conteúdo mensal', 'Dashboard de métricas em tempo real'].map(featureItem)}
+            </div>
+
+            <button style={{
+              marginTop: 24, width: '100%', padding: '13px 0', borderRadius: 9999,
+              background: C.magenta, border: 'none',
+              color: '#0F041A', fontFamily: 'Poppins', fontSize: 14, fontWeight: 700,
+              cursor: 'pointer', transition: 'all 0.15s',
+            }}
+            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,28,247,0.85)'; }}
+            onMouseLeave={e => { e.currentTarget.style.background = C.magenta; }}
+            >Quero este plano</button>
+          </div>
+
+        </div>
+
+        <p style={{ textAlign: 'center', fontFamily: 'Poppins', fontSize: 12, fontWeight: 300,
+          color: 'rgba(253,253,253,0.25)', marginTop: 24 }}>
+          Dúvidas? Fale com a gente — <span style={{ color: C.magenta }}>contato.novlab@gmail.com</span>
+        </p>
+      </div>
+    </div>
+  );
+}
+
+// ─── SCREENS ───
+function HomeScreen({ cardStyle, heroStyle, onComecerAgora }) {
+  const { isMobile, isTablet } = useBreakpoint();
+  const isSmall = isMobile || isTablet;
+
+  const hPad = isMobile ? '20px' : isTablet ? '32px' : '64px';
+  const vPad = isMobile ? '32px' : isTablet ? '40px' : '56px';
+  const h1Size = isMobile ? 44 : isTablet ? 54 : 68;
+
+  return (
+    <div style={{ minHeight: '100vh', paddingTop: 70 }}>
+      <div className="ticker-wrap" style={{ position: 'relative', zIndex: 10 }}>
+        <div className="ticker-inner">
+          {[...Array(2)].map((_, r) => (
+            <span key={r}>
+              <span>INTELIGÊNCIA ARTIFICIAL</span>
+              <span>✦ DADOS QUE GUIAM DECISÕES</span>
+              <span>✦ MARKETING É CIÊNCIA</span>
+              <span>✦ RESULTADO MENSURÁVEL</span>
+              <span>✦ INOVAÇÃO CONTÍNUA</span>
+              <span>✦ NOV LAB — 2025</span>
+              <span>✦ O FUTURO COMEÇA AQUI</span>
+            </span>
+          ))}
+        </div>
+      </div>
+
+      <div style={{ maxWidth: 1200, margin: '0 auto',
+        padding: `${vPad} ${hPad} 80px`,
+        display: 'grid',
+        gridTemplateColumns: isSmall ? '1fr' : '1fr 1fr',
+        gap: isSmall ? 0 : 80,
+        alignItems: 'center' }}>
+
+        {/* Left */}
+        <div>
+          <Tag>Brand Identity 2025</Tag>
+          <h1 style={{ fontFamily: 'Poppins', fontSize: h1Size, fontWeight: 900,
+            fontStyle: heroStyle === 'italic' ? 'italic' : 'normal',
+            color: C.fg, lineHeight: 1.0, margin: '20px 0 10px' }}>
+            Marketing<br/>
+            <span style={{ color: C.magenta }}>é ciência.</span>
+          </h1>
+          <p style={{ fontFamily: 'Poppins', fontSize: isMobile ? 16 : 18, fontWeight: 300, color: C.muted,
+            lineHeight: 1.65, maxWidth: 440, marginBottom: 8 }}>
+            O futuro começa aqui.
+          </p>
+          <p style={{ fontFamily: 'Poppins', fontSize: 14, fontWeight: 300,
+            color: 'rgba(253,253,253,0.38)', lineHeight: 1.7, maxWidth: 440, marginBottom: 32 }}>
+            Em um laboratório, nada é por acaso. Cada dado tem significado, cada ação gera resultado.
+          </p>
+          <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+            <Btn onClick={onComecerAgora}>Começar agora</Btn>
+            <Btn variant="outline" onClick={() => window.open('https://www.instagram.com/no.vlab/', '_blank')}>Ver nosso trabalho</Btn>
+          </div>
+          <div style={{ display: 'flex', gap: isMobile ? 24 : 40, marginTop: 44,
+            paddingTop: 28, borderTop: `1px solid ${C.border}` }}>
+            {[['IA', 'No centro de cada estratégia'], ['Dados', 'Que guiam decisões'], ['Resultado', 'Mensurável e real']].map(([n, l]) => (
+              <div key={n}>
+                <div style={{ fontFamily: 'Poppins', fontSize: isMobile ? 17 : 20, fontWeight: 800, color: C.magenta }}>{n}</div>
+                <div style={{ fontFamily: 'Montserrat', fontSize: 10, color: 'rgba(253,253,253,0.3)',
+                  marginTop: 5, lineHeight: 1.4, maxWidth: 100, textTransform: 'uppercase', letterSpacing: '0.06em' }}>{l}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Right — só aparece em desktop/tablet */}
+        {!isMobile && (
+          <div style={{ position: 'relative', display: 'flex', justifyContent: 'center', alignItems: 'center',
+            marginTop: isTablet ? 48 : 0 }}>
+            <div className="glass" style={{ width: isTablet ? 300 : 360, height: isTablet ? 380 : 440,
+              borderRadius: 63, display: 'flex', flexDirection: 'column',
+              alignItems: 'center', justifyContent: 'center', gap: 18, position: 'relative', overflow: 'hidden' }}>
+              <div className="scan-line" />
+              <div style={{ position: 'absolute', inset: 0,
+                background: 'radial-gradient(ellipse at 50% 10%, rgba(255,28,247,0.2) 0%, transparent 60%)' }} />
+              <div style={{ fontFamily: 'Space Mono', fontSize: 11, color: C.magenta, opacity: 0.6, letterSpacing: '0.06em' }}>
+                NL — Laboratório Digital
+              </div>
+              <NMark size={isTablet ? 64 : 80} color={C.fg} dotColor={C.magenta} />
+              <div style={{ width: 48, height: 2, background: C.magenta, borderRadius: 1 }} />
+              <p style={{ fontFamily: 'Poppins', fontSize: 13, fontWeight: 300,
+                color: 'rgba(253,253,253,0.4)', textAlign: 'center', maxWidth: 200, lineHeight: 1.6 }}>
+                Marketing inteligente para marcas que recusam o ordinário.
+              </p>
+            </div>
+
+            {!isTablet && (
+              <>
+                <div className="glass" style={{ position: 'absolute', bottom: -14, right: -16,
+                  borderRadius: 20, padding: '14px 18px', minWidth: 170 }}>
+                  <div style={{ fontFamily: 'Montserrat', fontSize: 9, fontWeight: 600,
+                    letterSpacing: '0.12em', textTransform: 'uppercase', color: C.magenta, marginBottom: 6 }}>
+                    Insight do dia
+                  </div>
+                  <div style={{ fontFamily: 'Poppins', fontSize: 18, fontWeight: 800,
+                    fontStyle: 'italic', color: C.fg, lineHeight: 1.1 }}>
+                    Dados não<br/>mentem.
+                  </div>
+                  <div style={{ fontFamily: 'Space Mono', fontSize: 11, color: C.muted, marginTop: 6 }}>
+                    @novlab
+                  </div>
+                </div>
+
+                <div style={{ position: 'absolute', top: 20, left: -10,
+                  background: C.magenta, borderRadius: 9999, padding: '8px 18px' }}>
+                  <div style={{ fontFamily: 'Montserrat', fontSize: 11, fontWeight: 600,
+                    color: '#0F041A', letterSpacing: '0.04em' }}>
+                    Ousada. Precisa. Visionária.
+                  </div>
+                </div>
+              </>
+            )}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function ConceitoScreen({ cardStyle, heroStyle }) {
+  const { isMobile, isTablet } = useBreakpoint();
+  const hPad = isMobile ? '20px' : isTablet ? '32px' : '64px';
+  const pilares = [
+    { titulo: 'Inteligência', desc: 'IA e automação no centro de cada estratégia. Dados que guiam decisões — nada por acaso.' },
+    { titulo: 'Resultado',    desc: 'Marketing que não é achismo — é ciência. Métricas reais, impacto real.' },
+    { titulo: 'Inovação',     desc: 'Sempre à frente. Quebrar padrões com propósito e criatividade.' },
+  ];
+  const personalidade = ['Ousada', 'Precisa', 'Visionária', 'Direta', 'Tecnológica', 'Confiante'];
+  const cardBg = cardStyle === 'border' ? 'transparent' : C.purple;
+  const cardBorder = `2px solid ${C.border}`;
+
+  const pilaresCols = isMobile ? '1fr' : isTablet ? 'repeat(2, 1fr)' : 'repeat(3, 1fr)';
+  const bottomCols  = isMobile ? '1fr' : '1fr 1fr';
+
+  return (
+    <div style={{ minHeight: '100vh', paddingTop: 70 }}>
+      <div style={{ maxWidth: 1200, margin: '0 auto', padding: `${isMobile ? '40px' : '72px'} ${hPad} 80px` }}>
+
+        <div style={{ marginBottom: isMobile ? 40 : 64 }}>
+          <Tag>Essência da Marca</Tag>
+          <blockquote style={{ fontFamily: 'Poppins',
+            fontSize: isMobile ? 24 : isTablet ? 32 : 40,
+            fontWeight: 900,
+            fontStyle: heroStyle === 'italic' ? 'italic' : 'normal',
+            color: C.fg, lineHeight: 1.15, marginTop: 24, maxWidth: 680 }}>
+            "Em um laboratório,<br/>
+            <span style={{ color: C.magenta }}>nada é por acaso.</span><br/>
+            Cada dado tem significado,<br/>cada ação gera resultado."
+          </blockquote>
+          <div style={{ fontFamily: 'Space Mono', fontSize: 12, color: 'rgba(253,253,253,0.25)', marginTop: 14 }}>
+            — NOV Lab Manifesto
+          </div>
+        </div>
+
+        <div style={{ marginBottom: 32 }}>
+          <div style={{ fontFamily: 'Montserrat', fontSize: 11, fontWeight: 600,
+            letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(253,253,253,0.25)',
+            marginBottom: 24 }}>Os 3 Pilares da Marca</div>
+          <div style={{ display: 'grid', gridTemplateColumns: pilaresCols, gap: 16 }}>
+            {pilares.map((p, i) => (
+              <div key={i} className="glass" style={{ background: cardBg, borderRadius: 28, padding: '24px 22px',
+                border: cardBorder, transition: 'all 0.25s', cursor: 'default' }}
+                onMouseEnter={e => { e.currentTarget.style.borderColor = C.magenta; e.currentTarget.style.transform = 'translateY(-4px)'; }}
+                onMouseLeave={e => { e.currentTarget.style.borderColor = C.border; e.currentTarget.style.transform = 'translateY(0)'; }}
+              >
+                <div style={{ width: 32, height: 3, background: C.magenta, borderRadius: 2, marginBottom: 16 }} />
+                <div style={{ fontFamily: 'Poppins', fontSize: 20, fontWeight: 800, color: C.fg, marginBottom: 8 }}>{p.titulo}</div>
+                <div style={{ fontFamily: 'Poppins', fontSize: 13, fontWeight: 300, color: C.muted, lineHeight: 1.65 }}>{p.desc}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div style={{ display: 'grid', gridTemplateColumns: bottomCols, gap: 16, marginTop: 16 }}>
+          <div className="glass" style={{ background: cardBg, borderRadius: 28, padding: '24px 28px', border: cardBorder }}>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10 }}>
+              {personalidade.map(p => <Tag key={p}>{p}</Tag>)}
+            </div>
+          </div>
+          <div className="glass" style={{ background: cardBg, borderRadius: 28, padding: '24px 28px', border: cardBorder }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+              <div>
+                <div style={{ fontFamily: 'Montserrat', fontSize: 10, fontWeight: 600, color: C.magenta,
+                  textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 10 }}>✓ SIM</div>
+                {['Direto e confiante', 'Baseado em dados', 'Futurista e inspirador', 'Técnico quando necessário'].map(t => (
+                  <div key={t} style={{ fontFamily: 'Poppins', fontSize: 12, fontWeight: 300, color: C.muted, marginBottom: 6 }}>{t}</div>
+                ))}
+              </div>
+              <div>
+                <div style={{ fontFamily: 'Montserrat', fontSize: 10, fontWeight: 600,
+                  color: 'rgba(253,253,253,0.3)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 10 }}>✗ NÃO</div>
+                {['Jargões sem sentido', 'Promessas vazias', 'Linguagem passiva', 'Excessivamente formal'].map(t => (
+                  <div key={t} style={{ fontFamily: 'Poppins', fontSize: 12, fontWeight: 300, color: 'rgba(253,253,253,0.25)', marginBottom: 6 }}>{t}</div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ServicosScreen({ cardStyle, heroStyle }) {
+  const { isMobile, isTablet } = useBreakpoint();
+  const hPad = isMobile ? '20px' : isTablet ? '32px' : '64px';
+  const cardBg = cardStyle === 'border' ? 'transparent' : C.purple;
+  const gridCols = isMobile ? '1fr' : isTablet ? 'repeat(2, 1fr)' : 'repeat(3, 1fr)';
+  const servicos = [
+    { tag: 'Web',     titulo: 'Landing Pages',      desc: 'Páginas que convertem visitantes em clientes reais.' },
+    { tag: 'Social',  titulo: 'Social Media',        desc: 'Carrosséis e posts estáticos que param o scroll.' },
+    { tag: 'Vídeo',   titulo: 'Reels & Vídeos',      desc: 'Edição com corte certeiro e impacto visual.' },
+    { tag: 'Tráfego', titulo: 'Google & Meta Ads',   desc: 'Gestão de tráfego pago com foco em resultado.' },
+    { tag: 'Marca',   titulo: 'Identidade Visual',   desc: 'Branding estratégico para marcas com ambição.' },
+    { tag: 'Design',  titulo: 'Peças Estáticas',     desc: 'Arte para cada formato com precisão.' },
+  ];
+  return (
+    <div style={{ minHeight: '100vh', paddingTop: 70 }}>
+      <div style={{ maxWidth: 1200, margin: '0 auto', padding: `${isMobile ? '40px' : '72px'} ${hPad}` }}>
+        <Tag>O que fazemos</Tag>
+        <h2 style={{ fontFamily: 'Poppins',
+          fontSize: isMobile ? 36 : isTablet ? 44 : 54,
+          fontWeight: 900,
+          fontStyle: heroStyle === 'italic' ? 'italic' : 'normal',
+          color: C.fg, marginTop: 18, marginBottom: 36, lineHeight: 1.0 }}>
+          Serviços que<br/><span style={{ color: C.magenta }}>geram resultado.</span>
+        </h2>
+        <div style={{ display: 'grid', gridTemplateColumns: gridCols, gap: 16 }}>
+          {servicos.map((s, i) => (
+            <div key={i} className="glass" style={{ background: cardBg, borderRadius: 28, padding: '24px 22px',
+              border: `2px solid ${C.border}`, transition: 'all 0.25s', cursor: 'default' }}
+              onMouseEnter={e => { e.currentTarget.style.borderColor = C.magenta; e.currentTarget.style.transform = 'translateY(-4px)'; }}
+              onMouseLeave={e => { e.currentTarget.style.borderColor = C.border; e.currentTarget.style.transform = 'translateY(0)'; }}
+            >
+              <Tag>{s.tag}</Tag>
+              <div style={{ fontFamily: 'Poppins', fontSize: 19, fontWeight: 700,
+                color: C.fg, margin: '12px 0 8px', lineHeight: 1.1 }}>{s.titulo}</div>
+              <div style={{ fontFamily: 'Poppins', fontSize: 13, fontWeight: 300,
+                color: C.muted, lineHeight: 1.6 }}>{s.desc}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ContatoScreen({ heroStyle }) {
+  const { isMobile, isTablet } = useBreakpoint();
+  const hPad = isMobile ? '20px' : isTablet ? '32px' : '64px';
+
+  const [nome, setNome] = useState('');
+  const [email, setEmail] = useState('');
+  const [servico, setServico] = useState('');
+
+  function handleEnviar() {
+    const dest = encodeURIComponent('contato.novlab@gmail.com');
+    const assunto = encodeURIComponent('Solicitação de Orçamento — NOV Lab');
+    const corpo = encodeURIComponent(
+      `Olá, equipe NOV Lab!\n\nMeu nome é ${nome || '(não informado)'} e gostaria de solicitar um orçamento.\n\nServiço de interesse: ${servico || '(não informado)'}\n\nAguardo o retorno.\n\nAtenciosamente,\n${nome || 'Cliente'}`
+    );
+    window.open(`https://mail.google.com/mail/?view=cm&to=${dest}&su=${assunto}&body=${corpo}`, '_blank');
+  }
+
+  const inputStyle = {
+    background: 'rgba(42,10,74,0.3)', backdropFilter: 'blur(14px)', border: `2px solid ${C.border}`,
+    borderRadius: 16, padding: '16px 20px', fontSize: 15,
+    fontWeight: 300, color: C.fg, outline: 'none', width: '100%',
+    transition: 'border-color 0.15s',
+  };
+
+  return (
+    <div style={{ minHeight: '100vh', paddingTop: 70, display: 'flex', alignItems: 'center' }}>
+      <div style={{ maxWidth: 640, margin: '0 auto', padding: `${isMobile ? '40px' : '80px'} ${hPad}`, width: '100%' }}>
+        <Tag>Vamos conversar</Tag>
+        <h2 style={{ fontFamily: 'Poppins',
+          fontSize: isMobile ? 36 : isTablet ? 44 : 54,
+          fontWeight: 900,
+          fontStyle: heroStyle === 'italic' ? 'italic' : 'normal',
+          color: C.fg, marginTop: 20, marginBottom: 12, lineHeight: 1.0 }}>
+          O futuro<br/><span style={{ color: C.magenta }}>começa aqui.</span>
+        </h2>
+        <p style={{ fontFamily: 'Poppins', fontSize: 15, fontWeight: 300,
+          color: C.muted, lineHeight: 1.7, marginBottom: 32 }}>
+          Marketing inteligente para marcas que recusam o ordinário e constroem o futuro. Fale com a nossa equipe.
+        </p>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+          <input placeholder="Seu nome" value={nome} onChange={e => setNome(e.target.value)}
+            style={inputStyle}
+            onFocus={e => e.target.style.borderColor = C.magenta}
+            onBlur={e => e.target.style.borderColor = C.border} />
+          <input placeholder="contato@suamarca.com.br" type="email" value={email} onChange={e => setEmail(e.target.value)}
+            style={inputStyle}
+            onFocus={e => e.target.style.borderColor = C.magenta}
+            onBlur={e => e.target.style.borderColor = C.border} />
+          <input placeholder="Qual serviço você precisa?" value={servico} onChange={e => setServico(e.target.value)}
+            style={inputStyle}
+            onFocus={e => e.target.style.borderColor = C.magenta}
+            onBlur={e => e.target.style.borderColor = C.border} />
+          <div style={{ marginTop: 8 }}>
+            <Btn size="lg" onClick={handleEnviar}>Enviar mensagem</Btn>
+          </div>
+        </div>
+
+        <div style={{ marginTop: 44, paddingTop: 28, borderTop: `1px solid ${C.border}`,
+          display: 'flex', flexWrap: 'wrap', gap: isMobile ? 24 : 40 }}>
+          {[['E-mail', 'contato.novlab@gmail.com'], ['Site', 'novlab.com.br'], ['Instagram', '@no.vlab']].map(([label, val]) => (
+            <div key={label}>
+              <div style={{ fontFamily: 'Montserrat', fontSize: 10, fontWeight: 600,
+                color: 'rgba(253,253,253,0.25)', textTransform: 'uppercase',
+                letterSpacing: '0.1em', marginBottom: 5 }}>{label}</div>
+              <div style={{ fontFamily: 'Space Mono', fontSize: 13, color: C.magenta }}>{val}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── APP ───
+const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+  "screen": "home",
+  "cardStyle": "purple",
+  "heroStyle": "italic"
+}/*EDITMODE-END*/;
+
+function App() {
+  const saved = localStorage.getItem('novlab2-screen') || TWEAK_DEFAULTS.screen;
+  const [screen, setScreen] = useState(saved);
+  const [cardStyle, setCardStyle] = useState(TWEAK_DEFAULTS.cardStyle);
+  const [heroStyle, setHeroStyle] = useState(TWEAK_DEFAULTS.heroStyle);
+  const [showPlans, setShowPlans] = useState(false);
+
+  useEffect(() => {
+    localStorage.setItem('novlab2-screen', screen);
+    const sel = document.getElementById('tw-screen');
+    if (sel) sel.value = screen;
+  }, [screen]);
+
+  useEffect(() => {
+    window._setScreen = setScreen;
+    window._setCards = setCardStyle;
+    window._setHero = setHeroStyle;
+  }, []);
+
+  const screens = { home: HomeScreen, conceito: ConceitoScreen, servicos: ServicosScreen, contato: ContatoScreen };
+  const Screen = screens[screen] || HomeScreen;
+
+  return (
+    <div className="nov-bg nov-bg-radial" style={{ minHeight: '100vh', overflowY: 'auto', position: 'relative' }}>
+      <div className="tech-grid" />
+      <div className="orb orb1" /><div className="orb orb2" /><div className="orb orb3" />
+      <Nav onNav={setScreen} current={screen} />
+      <Screen cardStyle={cardStyle} heroStyle={heroStyle} onComecerAgora={() => setShowPlans(true)} />
+      {showPlans && <PlansModal onClose={() => setShowPlans(false)} />}
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+
+<script>
+window.addEventListener('message', e => {
+  if (e.data?.type === '__activate_edit_mode') document.getElementById('tweaks-panel').classList.add('open');
+  if (e.data?.type === '__deactivate_edit_mode') document.getElementById('tweaks-panel').classList.remove('open');
+});
+window.parent.postMessage({ type: '__edit_mode_available' }, '*');
+
+function setCards(v) {
+  ['purple','border'].forEach(k => document.getElementById('tw-'+k)?.classList.toggle('active', k===v));
+  if (window._setCards) window._setCards(v);
+  window.parent.postMessage({ type: '__edit_mode_set_keys', edits: { cardStyle: v } }, '*');
+}
+function setHero(v) {
+  ['italic','normal'].forEach(k => document.getElementById('tw-'+k)?.classList.toggle('active', k===v));
+  if (window._setHero) window._setHero(v);
+  window.parent.postMessage({ type: '__edit_mode_set_keys', edits: { heroStyle: v } }, '*');
+}
+document.getElementById('tw-screen').addEventListener('change', function() {
+  if (window._setScreen) window._setScreen(this.value);
+});
+</script>
+</body>
+</html>
